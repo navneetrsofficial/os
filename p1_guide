@@ -1,0 +1,162 @@
+WSL2 + Ubuntu + GCC Setup
+OS Practical 1 – Fork System Call
+STEP 1 — Install WSL2 and Ubuntu
+This will: Install WSL and Ubuntu on Windows.
+
+Terminal: Windows PowerShell (Run as Administrator)
+
+Command:
+wsl --install -d Ubuntu
+
+
+Restart your computer if prompted.
+
+STEP 2 — Configure WSL2
+This will: Update WSL, set WSL2 as default and verify installation.
+
+Terminal: Windows PowerShell (Administrator)
+
+Commands:
+wsl --update
+wsl --set-default-version 2
+wsl --status
+wsl --list --verbose
+
+
+Check: Ubuntu should show VERSION 2.
+
+STEP 3 — Create Ubuntu Account
+This will: Create your Linux username and password.
+
+Application: Ubuntu
+1. Open Ubuntu from the Windows Start menu.
+2. Enter your username.
+3. Enter your password.
+4. Confirm your password.
+Note: Password characters will not appear while typing.
+
+STEP 4 — Update Ubuntu
+This will: Update package information and upgrade installed packages.
+
+Terminal: Ubuntu
+
+Commands:
+sudo apt update
+sudo apt upgrade -y
+
+
+
+STEP 5 — Install GCC
+This will: Install GCC, G++, Make and essential development tools.
+
+Terminal: Ubuntu
+
+Command:
+sudo apt install build-essential -y
+
+
+
+STEP 6 — Verify GCC and G++
+This will: Check whether C and C++ compilers are installed.
+
+Terminal: Ubuntu
+
+Commands:
+gcc --version
+g++ --version
+
+
+
+STEP 7 — Create Practical Folder
+This will: Create a folder for Practical 1.
+
+Terminal: Ubuntu
+
+Command:
+mkdir -p ~/OS_Practicals/Practical_01_Fork
+
+
+
+STEP 8 — Enter Practical Folder
+This will: Navigate into the Practical 1 folder and verify your location.
+
+Terminal: Ubuntu
+
+Commands:
+cd ~/OS_Practicals/Practical_01_Fork
+pwd
+
+
+
+STEP 9 — Create C Program
+This will: Create practical1.c and automatically save the C program inside it. No separate code editor is required.
+
+Terminal: Ubuntu
+
+Command:
+cat > practical1.c <<'EOF'
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main()
+{
+    pid_t pid = fork();
+
+    if (pid == -1)
+        printf("Fork failed\n");
+
+    else if (pid == 0)
+    {
+        printf("\nChild Process\n");
+        printf("Child PID: %d\n", getpid());
+        printf("Parent PID: %d\n", getppid());
+    }
+
+    else
+    {
+        printf("\nParent Process\n");
+        printf("Parent PID: %d\n", getpid());
+        printf("Child PID: %d\n", pid);
+    }
+
+    return 0;
+}
+EOF
+
+
+Verify file creation:
+ls
+
+
+
+STEP 10 — Compile C Program
+This will: Compile practical1.c and generate an executable named practical1.
+
+Terminal: Ubuntu (inside Practical_01_Fork)
+
+Command:
+gcc practical1.c -o practical1
+
+
+
+STEP 11 — Execute C Program
+This will: Run the compiled program and display Parent Process and Child Process information.
+
+Terminal: Ubuntu
+
+Command:
+./practical1
+
+
+Example Output:
+Parent Process
+Parent PID: 3650
+Child PID: 3651
+
+Child Process
+Child PID: 3651
+Parent PID: 3650
+
+
+Note: PID values and the order of output may change every time you execute the program.
