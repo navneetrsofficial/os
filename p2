@@ -1,0 +1,34 @@
+p = [
+    ["P1", 3, 2],
+    ["P2", 5, 2],
+    ["P3", 1, 5],
+    ["P4", 3, 2],
+    ["P5", 6, 2]
+]
+
+p.sort(key=lambda x: x[1])
+
+time = 0
+total_wt = 0
+total_tat = 0
+
+print("p\tAT\tBT\tCT\tTAT\tWT")
+
+for name, at, bt in p:
+
+    if time < at:
+        time = at
+
+    ct = time + bt
+    tat = ct - at
+    wt = tat - bt
+
+    print(name, at, bt, ct, tat, wt, sep="\t")
+
+    total_wt += wt
+    total_tat += tat
+
+    time = ct
+
+print("\nAverage WT:", total_wt / 5)
+print("Average TAT:", total_tat / 5)
