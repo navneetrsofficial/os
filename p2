@@ -32,3 +32,27 @@ for name, at, bt in p:
 
 print("\nAverage WT:", total_wt / 5)
 print("Average TAT:", total_tat / 5)
+
+#===========================================================================================
+
+p = [
+    ["P1", 5],
+    ["P2", 2],
+    ["P3", 4],
+    ["P4", 1]
+]
+
+p.sort(key=lambda x: x[1])
+
+time = 0
+
+print("p\tBT\tCT\tTAT\tWT")
+
+for name, bt in p:
+    time += bt
+
+    ct = time
+    tat = ct
+    wt = tat - bt
+
+    print(name, bt, ct, tat, wt, sep="\t")
