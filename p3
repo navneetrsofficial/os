@@ -1,116 +1,41 @@
-
-# ROUND ROBIN SCHEDULING
-
-p = ["P1", "P2", "P3", "P4"]
-at = [0, 1, 2, 4]
-bt = [5, 4, 2, 1]
-
-rt = bt.copy()
+p = [["P1", 5], ["P2", 3], ["P3", 4]]
 q = 2
-
-ct = [0] * 4
 time = 0
-completed = 0
+wt = {}
+tat = {}
 
-gantt = []
+while any(x[1] > 0 for x in p):
+    for x in p:
+        if x[1] > 0:
+            t = min(q, x[1])
+            time += t
+            x[1] -= t
+            if x[1] == 0:
+                tat[x[0]] = time
+                wt[x[0]] = time - 5 if x[0] == "P1" else time - 3 if x[0] == "P2" else time - 4
 
-while completed < 4:
+print("Process\tWT\tTAT")
+for x in p:
+    print(x[0], "\t", wt[x[0]], "\t", tat[x[0]])
 
-    found = False
+print("Average WT:", sum(wt.values()) / len(p))
+print("Average TAT:", sum(tat.values()) / len(p))
 
-    for i in range(4):
+#-----------------------------------------------------------------------------------------------------------------------
 
-        if rt[i] > 0 and at[i] <= time:
-
-            found = True
-
-            gantt.append(p[i])
-
-            if rt[i] > q:
-                time += q
-                rt[i] -= q
-            else:
-                time += rt[i]
-                rt[i] = 0
-                ct[i] = time
-                completed += 1
-
-    if not found:
-        time += 1
-
-tat = []
-wt = []
-
-for i in range(4):
-    tat.append(ct[i] - at[i])
-    wt.append(tat[i] - bt[i])
-
-print("Gantt Chart:")
-print(gantt)
-
-print("\nPID\tAT\tBT\tCT\tTAT\tWT")
-
-for i in range(4):
-    print(p[i], "\t", at[i], "\t", bt[i],
-          "\t", ct[i], "\t", tat[i], "\t", wt[i])
-
-print("\nAverage Waiting Time:", sum(wt)/4)
-print("Average Turnaround Time:", sum(tat)/4)
-
-#--------------------------------------------------------------------------
-
-
-# PRIORITY SCHEDULING
-
-p = ["P1", "P2", "P3", "P4"]
-at = [0, 1, 2, 3]
-bt = [4, 3, 1, 5]
-pr = [2, 1, 4, 3]
-
-ct = [0] * 4
-tat = [0] * 4
-wt = [0] * 4
-done = [0] * 4
+p = [["P1", 5, 2], ["P2", 3, 1], ["P3", 4, 3]]
+p.sort(key=lambda x: x[2])
 
 time = 0
-completed = 0
-gantt = []
+wt = {}
+tat = {}
 
-while completed < 4:
+print("Process\tWT\tTAT")
+for x in p:
+    wt[x[0]] = time
+    time += x[1]
+    tat[x[0]] = time
+    print(x[0], "\t", wt[x[0]], "\t", tat[x[0]])
 
-    index = -1
-
-    for i in range(4):
-        if done[i] == 0 and at[i] <= time:
-
-            if index == -1 or pr[i] < pr[index]:
-                index = i
-
-    if index == -1:
-        time += 1
-        continue
-
-    gantt.append(p[index])
-
-    time += bt[index]
-
-    ct[index] = time
-    tat[index] = ct[index] - at[index]
-    wt[index] = tat[index] - bt[index]
-
-    done[index] = 1
-    completed += 1
-
-print("Gantt Chart:")
-print(gantt)
-
-print("\nPID\tAT\tBT\tPR\tCT\tTAT\tWT")
-
-for i in range(4):
-    print(p[i], "\t", at[i], "\t", bt[i],
-          "\t", pr[i], "\t", ct[i], "\t",
-          tat[i], "\t", wt[i])
-
-print("\nAverage Waiting Time:", sum(wt)/4)
-print("Average Turnaround Time:", sum(tat)/4)
-
+print("Average WT:", sum(wt.values()) / len(p))
+print("Average TAT:", sum(tat.values()) / len(p))
