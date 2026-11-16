@@ -1,3 +1,4 @@
+
 p = [
     ["P1", 3, 2],
     ["P2", 5, 2],
@@ -14,6 +15,8 @@ total_tat = 0
 
 print("p\tAT\tBT\tCT\tTAT\tWT")
 
+gantt = "0"
+
 for name, at, bt in p:
 
     if time < at:
@@ -29,9 +32,13 @@ for name, at, bt in p:
     total_tat += tat
 
     time = ct
+    gantt += " -- " + name + " -- " + str(ct)
 
 print("\nAverage WT:", total_wt / 5)
 print("Average TAT:", total_tat / 5)
+
+print("\nGantt Chart:")
+print(gantt)
 
 #===========================================================================================
 
@@ -45,8 +52,12 @@ p = [
 p.sort(key=lambda x: x[1])
 
 time = 0
+total_wt = 0
+total_tat = 0
 
 print("p\tBT\tCT\tTAT\tWT")
+
+gantt = "0"
 
 for name, bt in p:
     time += bt
@@ -57,51 +68,13 @@ for name, bt in p:
 
     print(name, bt, ct, tat, wt, sep="\t")
 
+    total_wt += wt
+    total_tat += tat
 
--------------------------------------------------------------------------------
+    gantt += " -- " + name + " -- " + str(ct)
 
-p = [
-    ["P1", 0, 6],
-    ["P2", 1, 8],
-    ["P3", 2, 7],
-    ["P4", 3, 3],
-    ["P5", 4, 4]
-]
-
-time = 0
-total_wt = 0
-total_tat = 0
-
-print("p\tAT\tBT\tCT\tTAT\tWT")
-
-gantt = "0"
-chart = []
-
-for p in p:
-
-    name = p[0]
-    at = p[1]
-    bt = p[2]
-
-    if time < at:
-        time = at
-
-    time = time + bt
-
-    ct = time
-    tat = ct - at
-    wt = tat - bt
-
-    total_wt = total_wt + wt
-    total_tat = total_tat + tat
-
-    print(name, "\t", at, "\t", bt, "\t", ct, "\t", tat, "\t", wt)
-
-    gantt = gantt + " -- " + name + " -- " + str(ct)
-    chart.append(name)
-
-print("\nAverage Waiting Time =", total_wt / 5)
-print("Average Turnaround Time =", total_tat / 5)
+print("\nAverage WT:", total_wt / 4)
+print("Average TAT:", total_tat / 4)
 
 print("\nGantt Chart:")
 print(gantt)
