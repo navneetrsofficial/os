@@ -1,41 +1,61 @@
-p = [["P1", 5], ["P2", 3], ["P3", 4]]
+
+# ROUND ROBIN SCHEDULING
+
+p = [["P1", 5], ["P2", 3], ["P3", 4], ["P4", 2]]
 q = 2
-time = 0
-wt = {}
-tat = {}
+bt = {x[0]: x[1] for x in p}
+rem = bt.copy()
+ct, chart, time = {}, [], 0
 
-while any(x[1] > 0 for x in p):
-    for x in p:
-        if x[1] > 0:
-            t = min(q, x[1])
+while any(rem.values()):
+    for name in rem:
+        if rem[name] > 0:
+            t = min(q, rem[name])
+            chart.append(name)
             time += t
-            x[1] -= t
-            if x[1] == 0:
-                tat[x[0]] = time
-                wt[x[0]] = time - 5 if x[0] == "P1" else time - 3 if x[0] == "P2" else time - 4
+            rem[name] -= t
+            if rem[name] == 0:
+                ct[name] = time
 
-print("Process\tWT\tTAT")
-for x in p:
-    print(x[0], "\t", wt[x[0]], "\t", tat[x[0]])
+print("\nROUND ROBIN")
+print("Process", "BT", "CT", "TAT", "WT", sep="\t")
+wt, tat = [], []
 
-print("Average WT:", sum(wt.values()) / len(p))
-print("Average TAT:", sum(tat.values()) / len(p))
+for name, b in bt.items():
+    t = ct[name]
+    w = t - b
+    wt.append(w)
+    tat.append(t)
+    print(name, b, t, t, w, sep="\t")
 
-#-----------------------------------------------------------------------------------------------------------------------
+print("Average WT:", sum(wt)/4)
+print("Average TAT:", sum(tat)/4)
+print("Gantt Chart:", " | ".join(chart))
 
-p = [["P1", 5, 2], ["P2", 3, 1], ["P3", 4, 3]]
+
+# -----------------------
+
+
+# PRIORITY SCHEDULING
+
+p = [["P1", 5, 2], ["P2", 3, 1],
+     ["P3", 4, 3], ["P4", 2, 4]]
+
 p.sort(key=lambda x: x[2])
-
 time = 0
-wt = {}
-tat = {}
+wt, tat = [], []
 
-print("Process\tWT\tTAT")
-for x in p:
-    wt[x[0]] = time
-    time += x[1]
-    tat[x[0]] = time
-    print(x[0], "\t", wt[x[0]], "\t", tat[x[0]])
+print("\nPRIORITY SCHEDULING")
+print("Process", "BT", "Priority", "CT", "TAT", "WT", sep="\t")
 
-print("Average WT:", sum(wt.values()) / len(p))
-print("Average TAT:", sum(tat.values()) / len(p))
+for name, b, pr in p:
+    w = time
+    time += b
+    t = time
+    wt.append(w)
+    tat.append(t)
+    print(name, b, pr, t, t, w, sep="\t")
+
+print("Average WT:", sum(wt)/4)
+print("Average TAT:", sum(tat)/4)
+print("Gantt Chart:", " | ".join(x[0] for x in p))
