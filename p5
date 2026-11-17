@@ -1,1 +1,35 @@
 
+
+import java.util.concurrent.locks.*;
+
+public class ReaderWriter {
+    static String data = "Initial Data";
+    static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+
+    static void reader(String name) {
+        lock.readLock().lock();
+        try {
+            System.out.println(name + " is reading: " + data);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    static void writer(String name) {
+        lock.writeLock().lock();
+        try {
+            data = "Updated Data";
+            System.out.println(name + " is writing: " + data);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Thread r = new Thread(() -> reader("Reader"));
+        Thread w = new Thread(() -> writer("Writer"));
+        r.start(); w.start();
+        r.join(); w.join();
+        System.out.println("Final Data: " + data);
+    }
+}
